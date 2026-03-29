@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const HF_API_KEY = "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";
+const HF_API_KEY = process.env.REACT_APP_HF_KEY;
 
 export const enhancePrompt = async (input) => {
   try {
