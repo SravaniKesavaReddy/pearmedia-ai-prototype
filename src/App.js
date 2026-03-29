@@ -7,16 +7,20 @@ function App() {
   const [image, setImage] = useState("");
   const [uploadedImage, setUploadedImage] = useState("");
   const [analysis, setAnalysis] = useState("");
-
+  const [loading, setLoading] = useState(false);
   // ✅ FIXED: Add missing functions
   const handleEnhance = async () => {
-    const result = await enhancePrompt(input);
-    setEnhanced(result);
+  setLoading(true);
+  const res = await enhancePrompt(input);
+  setEnhanced(res);
+  setLoading(false);
   };
 
   const handleGenerateImage = async () => {
-    const img = await generateImage(enhanced);
-    setImage(img);
+  setLoading(true);
+  const img = await generateImage(enhanced);
+  setImage(img);
+  setLoading(false);
   };
 
   const handleImageUpload = (e) => {
@@ -30,59 +34,44 @@ function App() {
     );
   };
 
-  return (
-    <div
+return (
+  <div style={{
+    fontFamily: "Arial",
+    background: "#0f172a",
+    color: "white",
+    minHeight: "100vh",
+    padding: "40px",
+    textAlign: "center"
+  }}>
+    <h1>🚀 Pear Media AI Tool</h1>
+    {loading && <p>⏳ Loading...</p>}
+
+    <textarea
+      placeholder="Enter your prompt..."
+      value={input}
+      onChange={(e) => setInput(e.target.value)}
       style={{
-        textAlign: "center",
-        padding: "20px",
-        fontFamily: "Arial",
+        width: "60%",
+        height: "100px",
+        padding: "10px",
+        borderRadius: "10px",
+        marginBottom: "20px"
       }}
-    >
-      <h1>Pear Media AI Tool 🚀</h1>
+    />
 
-      {/* TEXT WORKFLOW */}
-      <textarea
-        placeholder="Enter prompt"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-      />
+    <br />
 
-      <br /><br />
-      <button onClick={handleEnhance}>Enhance</button>
+    <button onClick={handleEnhance} disabled={loading}>
+  Enhance ✨
+</button>
+    <button onClick={handleGenerateImage}>Generate Image 🎨</button>
 
-      <h3>Enhanced Prompt:</h3>
-      <p>{enhanced}</p>
+    <h3>Enhanced Prompt:</h3>
+    <p>{enhanced}</p>
 
-      {enhanced && (
-        <button onClick={handleGenerateImage}>
-          Generate Image
-        </button>
-      )}
-
-      <br /><br />
-      {image && <img src={image} alt="Generated" width="300" />}
-
-      <hr />
-
-      {/* IMAGE WORKFLOW */}
-      <h2>Upload Image</h2>
-
-      <input type="file" onChange={handleImageUpload} />
-
-      <br /><br />
-
-      {uploadedImage && (
-        <>
-          <img src={uploadedImage} alt="Uploaded" width="300" />
-          <br /><br />
-          <button onClick={handleAnalyze}>Analyze Image</button>
-        </>
-      )}
-
-      <h3>Analysis:</h3>
-      <p>{analysis}</p>
-    </div>
-  );
+    {image && <img src={image} alt="generated" width="300" />}
+  </div>
+);
 }
 
 export default App;
